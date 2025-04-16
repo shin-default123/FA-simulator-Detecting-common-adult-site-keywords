@@ -18,6 +18,29 @@ export default function ResultClient() {
 
   const url = searchParams.get('url')?.toLowerCase() || '';
 
+  function toLeetRegex(keyword: string): string {
+    const leetMap: { [char: string]: string } = {
+      'a': '[a@4]',
+      'e': '[e3]',
+      'i': '[i1!]',
+      'o': '[o0]',
+      's': '[s5$]',
+      't': '[t7+]',
+      'u': '[uü]',
+      'x': '[x%]',
+      'p': '[p]',
+      'r': '[r]',
+      'n': '[n]',
+      'd': '[d]',
+      'f': '[f]',
+      'l': '[l]',
+      'b': '[b]',
+    };
+  
+    return keyword.split('').map(char => leetMap[char.toLowerCase()] || char).join('');
+  }
+  
+
   useEffect(() => {
     if (!url) return;
     setInput(url);
@@ -30,17 +53,31 @@ export default function ResultClient() {
       const ctx = canvas.getContext('2d');
       if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
+
+    for (let keyword of adultKeywords) {
+      const pattern = new RegExp(toLeetRegex(keyword), "i");
+      const match = url.match(pattern);
     
-for (let keyword of adultKeywords) {
-      if (url.includes(keyword)) {
-       setResult("🔞 Accepted: Adult keyword detected.");
+      if (match) {
+        setResult("🔞 Accepted: Adult keyword detected.");
         setMatchedKeyword(keyword);
         setDetected(true);
         setTimeout(() => drawDFA(keyword), 100);
         return;
       }
     }
-
+    
+   {/* 
+    for (let keyword of adultKeywords) {
+          if (url.includes(keyword)) {
+          setResult("🔞 Accepted: Adult keyword detected.");
+            setMatchedKeyword(keyword);
+            setDetected(true);
+            setTimeout(() => drawDFA(keyword), 100);
+            return;
+          }
+        }
+    */}
     const regex = new RegExp(adultKeywords.join("|"), "i");
 const match = url.match(regex);
 
@@ -65,9 +102,10 @@ if (match) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const radius = 25;
-    const startX = 50;
     const gap = 70;
     const states = word.length + 1;
+    const totalWidth = (states - 1) * gap;
+    const startX = (canvas.width - totalWidth) / 2;
 
     for (let i = 0; i < states; i++) {
       const x = startX + i * gap;
@@ -119,7 +157,7 @@ if (match) {
   return (
     <main className="min-h-screen bg-white text-black px-6 pt-6">
       {/* Top bar: Logo + Search Bar */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full">
         <h1 className="text-2xl font-bold text-red-500">
             <Link href="/" >🔞 Website Filter</Link>
         </h1>

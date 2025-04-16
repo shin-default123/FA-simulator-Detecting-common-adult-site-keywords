@@ -14,10 +14,10 @@ export default function LandingPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
-      <div className="text-4xl font-bold text-red-500 mb-6">🔞 Website Filter</div>
+    <main className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-8">
+      <div className="text-3xl sm:text-4xl font-bold text-red-500 mb-6 text-center">🔞 Website Filter</div>
 
-      <div className="flex w-full max-w-xl items-center border border-gray-300 rounded-full shadow px-4 py-2">
+      <div className="flex w-full sm:flex-row max-w-xl items-center border border-gray-300 rounded-full shadow px-4 py-2">
       <input
           type="text"
           placeholder="Enter URL here..."
